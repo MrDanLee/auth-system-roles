@@ -22,7 +22,7 @@ const createDefaultAdmin = async () => {
     createdAt: new Date()
   });
 
-  console.log('  Admin creado: admin@test.com / admin123');
+  console.log('  Admin created: admin@test.com / admin123');
 };
 
 module.exports = { db, createDefaultAdmin };

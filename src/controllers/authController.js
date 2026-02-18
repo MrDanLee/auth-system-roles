@@ -23,21 +23,22 @@ const register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     if (User.findByEmail(email)) {
-      return res.status(400).json({ error: 'Email ya registrado' });
+      return res.status(400).json({ error: 'Email already registered' });
     }
 
     const user = await User.create({ name, email, password, role });
+
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
     db.refreshTokens.push({ token: refreshToken, userId: user.id });
 
     res.status(201).json({
-      message: 'Usuario registrado exitosamente',
+      message: 'User registered successfully',
       accessToken,
       refreshToken,
       user: User.getPublicData(user)
@@ -54,13 +55,13 @@ const login = async (req, res, next) => {
     const user = User.findByEmail(email);
 
     if (!user || !user.isActive) {
-      return res.status(401).json({ error: 'Credenciales invalidas' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     const isValid = await User.comparePassword(password, user.password);
 
     if (!isValid) {
-      return res.status(401).json({ error: 'Credenciales invalidas' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     const accessToken = generateAccessToken(user);
@@ -69,7 +70,7 @@ const login = async (req, res, next) => {
     db.refreshTokens.push({ token: refreshToken, userId: user.id });
 
     res.json({
-      message: 'Login exitoso',
+      message: 'Login successful',
       accessToken,
       refreshToken,
       user: User.getPublicData(user)
@@ -84,31 +85,31 @@ const refresh = (req, res, next) => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(401).json({ error: 'Refresh token requerido' });
+      return res.status(401).json({ error: 'Refresh token required' });
     }
 
     const tokenData = db.refreshTokens.find(t => t.token === refreshToken);
 
     if (!tokenData) {
-      return res.status(403).json({ error: 'Refresh token invalido' });
+      return res.status(403).json({ error: 'Invalid refresh token' });
     }
 
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const user = User.findById(decoded.id);
 
     if (!user || !user.isActive) {
-      return res.status(403).json({ error: 'Usuario no valido' });
+      return res.status(403).json({ error: 'Invalid user' });
     }
 
     const newAccessToken = generateAccessToken(user);
 
     res.json({
-      message: 'Token renovado',
+      message: 'Token renewed',
       accessToken: newAccessToken
     });
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      return res.status(403).json({ error: 'Refresh token expirado' });
+      return res.status(403).json({ error: 'Refresh token expired' });
     }
     next(error);
   }
@@ -124,7 +125,7 @@ const logout = (req, res) => {
     db.refreshTokens.splice(index, 1);
   }
 
-  res.json({ message: 'Logout exitoso' });
+  res.json({ message: 'Logout successful' });
 };
 
 const getMe = (req, res) => {

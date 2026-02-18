@@ -13,7 +13,7 @@ const rateLimit = (req, res, next) => {
   if (loginAttempts[ip].count >= maxAttempts) {
     const waitSeconds = Math.ceil((loginAttempts[ip].resetTime - now) / 1000);
     return res.status(429).json({
-      error: `Demasiados intentos. Espera ${waitSeconds} segundos.`
+      error: `Too many attempts. Wait ${waitSeconds} seconds.`
     });
   }
 

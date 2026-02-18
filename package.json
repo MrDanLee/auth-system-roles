@@ -1,13 +1,19 @@
 {
   "name": "auth-system-roles",
   "version": "1.0.0",
-  "description": "Sistema de autenticacion con roles y refresh tokens",
+  "description": "Authentication system with roles and refresh tokens",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["auth", "jwt", "roles", "node", "express"],
+  "keywords": [
+    "auth",
+    "jwt",
+    "roles",
+    "node",
+    "express"
+  ],
   "author": "Daniel Lozano",
   "license": "MIT",
   "dependencies": {

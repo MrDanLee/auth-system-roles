@@ -11,15 +11,15 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'Auth System con Roles funcionando',
+    message: 'Auth System with Roles is running',
     version: '1.0.0',
     author: 'Daniel Lozano',
     features: [
       'Access tokens (15 min)',
-      'Refresh tokens (7 dias)',
-      'Blacklist de tokens',
+      'Refresh tokens (7 days)',
+      'Token blacklist',
       'Roles: admin / moderator / user',
-      'Rate limiting por IP'
+      'Rate limiting by IP'
     ],
     endpoints: {
       auth: '/api/auth',
@@ -34,7 +34,7 @@ app.use('/api/users', userRoutes);
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(err.statusCode || 500).json({
-    error: err.message || 'Error del servidor'
+    error: err.message || 'Server error'
   });
 });
 

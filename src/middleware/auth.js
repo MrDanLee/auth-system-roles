@@ -7,18 +7,18 @@ const authenticate = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ error: 'Token no proporcionado' });
+      return res.status(401).json({ error: 'Token not provided' });
     }
 
     if (db.blacklistedTokens.includes(token)) {
-      return res.status(401).json({ error: 'Token revocado' });
+      return res.status(401).json({ error: 'Token revoked' });
     }
 
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = User.findById(decoded.id);
 
     if (!user || !user.isActive) {
-      return res.status(401).json({ error: 'Usuario no valido' });
+      return res.status(401).json({ error: 'Invalid user' });
     }
 
     req.user = user;
@@ -27,11 +27,11 @@ const authenticate = (req, res, next) => {
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
-        error: 'Token expirado',
+        error: 'Token expired',
         code: 'TOKEN_EXPIRED'
       });
     }
-    return res.status(401).json({ error: 'Token invalido' });
+    return res.status(401).json({ error: 'Invalid token' });
   }
 };
 
@@ -39,8 +39,8 @@ const authorize = (...allowedRoles) => {
   return (req, res, next) => {
     if (!allowedRoles.includes(req.user.role)) {
       return res.status(403).json({
-        error: 'Acceso denegado',
-        message: `Se requiere rol: ${allowedRoles.join(' o ')}`
+        error: 'Access denied',
+        message: `Requires role: ${allowedRoles.join(' or ')}`
       });
     }
     next();
