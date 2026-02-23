@@ -3,11 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 
-> Advanced authentication system with JWT access/refresh tokens, role-based access control, and production-ready security features
-
-## 🌐 Live Demo
-
-> Deploy coming soon - setting up production environment
+> Authentication and authorization system with JWT access/refresh tokens, role-based access control (RBAC), and production-ready security features
 
 ## ✨ Features
 
@@ -171,8 +167,7 @@ Content-Type: application/json
 
 ### Moderator
 - Access own profile
-- View user list (future feature)
-- Moderate content (future feature)
+- Elevated permissions above regular users
 
 ### User
 - Access own profile
@@ -193,10 +188,29 @@ General API:    100 requests per 15 minutes per IP
 ```
 
 ### Password Security
-- Minimum length: 6 characters
 - Hashed with bcrypt (cost factor: 10)
 - Never stored or transmitted in plain text
 - Constant-time comparison to prevent timing attacks
+
+## 🔄 Token Lifecycle
+
+```
+1. User logs in
+   ↓
+2. Receives access token (15min) + refresh token (7d)
+   ↓
+3. Uses access token for API requests
+   ↓
+4. Access token expires
+   ↓
+5. Uses refresh token to get new access token
+   ↓
+6. Repeat steps 3-5
+   ↓
+7. User logs out
+   ↓
+8. Both tokens added to blacklist
+```
 
 ## 📋 Example Use Cases
 
@@ -287,35 +301,13 @@ CORS_ORIGIN=*
 LOG_LEVEL=info
 ```
 
-## 🚢 Deployment
+## 📈 Roadmap
 
-### Production Checklist
-
-- [ ] Generate strong random secrets for tokens
-- [ ] Configure CORS_ORIGIN for your domain
-- [ ] Set NODE_ENV to 'production'
-- [ ] Enable HTTPS
-- [ ] Set up log aggregation
-- [ ] Configure rate limits for production load
-- [ ] Set up database (PostgreSQL/MongoDB) instead of in-memory
-- [ ] Implement token cleanup job
-- [ ] Add monitoring and alerting
-
-### Recommended Platforms
-- **Render**: Easy deployment, free tier available
-- **Railway**: Simple setup, automatic HTTPS
-- **Heroku**: Battle-tested platform
-- **Docker**: Containerized deployment
-
-## 🧪 Testing
-
-```bash
-# Run tests (coming soon)
-npm test
-
-# Run with coverage
-npm run test:coverage
-```
+- Database persistence (PostgreSQL or MongoDB) to replace in-memory storage
+- Automated test suite with Jest
+- Token cleanup background job
+- CI/CD pipeline with GitHub Actions
+- Expanded moderator permissions
 
 ## 📈 Performance Considerations
 
@@ -323,26 +315,6 @@ npm run test:coverage
 - **Rate limiting**: In-memory store (use Redis in production)
 - **Password hashing**: Balanced cost factor (10)
 - **Logging**: Async, environment-aware
-
-## 🔄 Token Lifecycle
-
-```
-1. User logs in
-   ↓
-2. Receives access token (15min) + refresh token (7d)
-   ↓
-3. Uses access token for API requests
-   ↓
-4. Access token expires
-   ↓
-5. Uses refresh token to get new access token
-   ↓
-6. Repeat steps 3-5
-   ↓
-7. User logs out
-   ↓
-8. Both tokens added to blacklist
-```
 
 ## 🤝 Contributing
 
@@ -356,19 +328,9 @@ MIT License - see [LICENSE](LICENSE) file
 
 **Daniel Andrés Lozano Meriño**
 
-- 🌐 Portfolio: [mrdanlee.github.io](https://mrdanlee.github.io)
 - 💼 GitHub: [@MrDanLee](https://github.com/MrDanLee)
 - 📧 Email: daniel23lozano@gmail.com
-- 🎓 Trained at: The Bridge School
-
-## 🙏 Acknowledgments
-
-- JWT best practices from Auth0 documentation
-- Security patterns from OWASP guidelines
-- Node.js community for excellent libraries
 
 ---
-
-**⭐ Star this repo if you find it useful for learning authentication patterns!**
 
 **Built with 🔐 and security in mind**
